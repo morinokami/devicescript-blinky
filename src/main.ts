@@ -1,7 +1,18 @@
-import * as ds from "@devicescript/core"
+import { pins } from "@dsboard/pico"
+import { startLightBulb } from "@devicescript/servers"
 
-const lightBulb = new ds.LightBulb()
+// start a lightbulb server on pin GP1
+// and store client in `led` variable
+const led = startLightBulb({
+    pin: pins.P1,
+})
+
+// start interval timer every 1000ms
 setInterval(async () => {
-    const brightness = await lightBulb.intensity.read()
-    await lightBulb.intensity.write(brightness > 0 ? 0 : 1)
+    // read current brightness
+    const brightness = await led.intensity.read()
+    // toggle on/off
+    const newbrightness = brightness > 0 ? 0 : 1
+    // apply new brightness
+    await led.intensity.write(newbrightness)
 }, 1000)
